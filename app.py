@@ -129,16 +129,14 @@ with tab1:
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Personas", f"{n:,}")
     c2.metric("Âge moyen", f"{df['age'].mean():.1f} ans")
-    g = df['gender'].astype(str).str.strip().str.lower()
-    pct_f = g.isin(['f','femme','female','woman','2']).mean() * 100
-    c3.metric("% femmes", f"{pct_f:.1f}%")
+    c3.metric("% actifs", f"{df['csp'].isin(['cadres','prof_interm','employes','ouvriers','artisans']).mean()*100:.1f}%")
     c4.metric("Km/j moyen", f"{df['km_jour'].mean():.1f} km")
 
     col1, col2 = st.columns(2)
     with col1:
-        fig = px.histogram(df, x='age', color='gender', nbins=30,
-                           title="Pyramide des âges",
-                           color_discrete_sequence=['#3498db','#e91e63','#95a5a6'])
+        fig = px.histogram(df, x='age', color='csp', nbins=30,
+                           title="Distribution des âges par CSP",
+                           color_discrete_sequence=px.colors.qualitative.Set2)
         fig.update_layout(bargap=0.05, legend_title="Genre")
         st.plotly_chart(fig, use_container_width=True)
 
