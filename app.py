@@ -129,8 +129,8 @@ with tab1:
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Personas", f"{n:,}")
     c2.metric("Âge moyen", f"{df['age'].mean():.1f} ans")
-    g = df['gender'].astype(str).str.lower()
-    pct_f = g.str.contains('f|femme|female|2', na=False).mean() * 100
+    g = df['gender'].astype(str).str.strip().str.lower()
+    pct_f = g.isin(['f','femme','female','woman','2']).mean() * 100
     c3.metric("% femmes", f"{pct_f:.1f}%")
     c4.metric("Km/j moyen", f"{df['km_jour'].mean():.1f} km")
 
@@ -268,7 +268,7 @@ with tab4:
     with col2:
         st.subheader("🚌 Potentiel report vers les TC")
         mask_tc = (
-            (df['acces_train'] > 50) &
+            (df.get('acces_train', pd.Series(0, index=df.index)) > 50) &
             (df['pct_voiture'] > 50) &
             (df['territoire'].isin(['periurbain','urbain_moyen']))
         )
