@@ -77,6 +77,22 @@ def load_data():
 
 df_full, STATS = load_data()
 
+# Colonnes calculées
+if 'classe_age' not in df_full.columns:
+    bins   = [0, 17, 24, 34, 44, 54, 64, 74, 120]
+    labels = ['<18','18-24','25-34','35-44','45-54','55-64','65-74','75+']
+    df_full['classe_age'] = pd.cut(df_full['age'], bins=bins, labels=labels, right=True).astype(str)
+
+if 'dep_cat' not in df_full.columns and 'score_dep' in df_full.columns:
+    def dep_cat(s):
+        try: s = float(s)
+        except: return 'indéterminé'
+        if s < 30: return 'faible'
+        if s < 55: return 'modéré'
+        if s < 75: return 'élevé'
+        return 'très élevé'
+    df_full['dep_cat'] = df_full['score_dep'].apply(dep_cat)
+
 # ── Sidebar filtres ──────────────────────────────────────────────────────────
 with st.sidebar:
     st.header("🔍 Filtres")
