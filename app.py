@@ -19,8 +19,8 @@ from pathlib import Path
 
 # ── URLs Google Drive ─────────────────────────────────────────────────────────
 # Partagez chaque fichier en "Tout le monde avec le lien" puis collez l'URL ici
-GDRIVE_CSV  = "https://drive.google.com/file/d/1sKz65OjE7SZHkb4cASU6CcdelZj4TK8v/view?usp=sharing"
-GDRIVE_JSON = "https://drive.google.com/file/d/1AWBcbVQvb1sqcBGetqcc1434yF2bEBB2/view?usp=sharing"
+GDRIVE_CSV  = "https://drive.google.com/file/d/1sKz65OjE7SZHkb4cASU6CcdelZj4TK8v/view?usp=drive_link"
+GDRIVE_JSON = ""  # optionnel
 
 def gdrive_id(url):
     m = re.search(r'/d/([^/]+)', url)
@@ -55,7 +55,7 @@ def load_data():
         st.stop()
     try:
         tmp_csv = "/tmp/personas_mobilite.csv"
-        gdown.download(id=csv_id, output=tmp_csv, quiet=True, fuzzy=True)
+        gdown.download(id=csv_id, output=tmp_csv, quiet=True)
         df = pd.read_csv(tmp_csv, low_memory=False)
     except Exception as e:
         st.error(f"❌ Erreur chargement CSV : {e}")
@@ -67,7 +67,7 @@ def load_data():
     if json_id:
         try:
             tmp_json = "/tmp/stats_mobilite.json"
-            gdown.download(id=json_id, output=tmp_json, quiet=True, fuzzy=True)
+            gdown.download(id=json_id, output=tmp_json, quiet=True)
             with open(tmp_json) as f:
                 stats = json.load(f)
         except Exception:
