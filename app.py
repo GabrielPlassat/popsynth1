@@ -19,8 +19,8 @@ from pathlib import Path
 
 # ── URLs Google Drive ─────────────────────────────────────────────────────────
 # Partagez chaque fichier en "Tout le monde avec le lien" puis collez l'URL ici
-GDRIVE_CSV  = "https://drive.google.com/file/d/VOTRE_ID_CSV/view?usp=sharing"
-GDRIVE_JSON = "https://drive.google.com/file/d/VOTRE_ID_JSON/view?usp=sharing"
+GDRIVE_CSV  = "https://drive.google.com/file/d/1sKz65OjE7SZHkb4cASU6CcdelZj4TK8v/view?usp=sharing"
+GDRIVE_JSON = "https://drive.google.com/file/d/1AWBcbVQvb1sqcBGetqcc1434yF2bEBB2/view?usp=sharing"
 
 def gdrive_url(url):
     """Convertit un lien de partage GDrive en URL de téléchargement direct."""
