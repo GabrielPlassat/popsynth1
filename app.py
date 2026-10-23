@@ -80,8 +80,8 @@ df_full, STATS = load_data()
 # ── Sidebar filtres ──────────────────────────────────────────────────────────
 with st.sidebar:
     st.header("🔍 Filtres")
-    sel_terr = st.multiselect("Territoire", df_full['terr'].unique().tolist(),
-                               default=df_full['terr'].unique().tolist())
+    sel_terr = st.multiselect("Territoire", df_full['territoire'].unique().tolist(),
+                               default=df_full['territoire'].unique().tolist())
     sel_csp  = st.multiselect("CSP", df_full['csp'].unique().tolist(),
                                default=df_full['csp'].unique().tolist())
     age_range = st.slider("Tranche d'âge", 0, 99, (18, 75))
@@ -90,7 +90,7 @@ with st.sidebar:
 
 # Appliquer filtres
 df = df_full[
-    (df_full['terr'].isin(sel_terr)) &
+    (df_full['territoire'].isin(sel_terr)) &
     (df_full['csp'].isin(sel_csp)) &
     (df_full['age'].between(age_range[0], age_range[1]))
 ].copy()
@@ -133,15 +133,15 @@ with tab1:
 
     col3, col4 = st.columns(2)
     with col3:
-        terr_counts = df['terr'].value_counts().reset_index()
+        terr_counts = df['territoire'].value_counts().reset_index()
         terr_counts.columns = ['territoire','n']
         fig = px.bar(terr_counts, x='territoire', y='n', title="Distribution territoriale",
                      color='territoire', color_discrete_sequence=px.colors.qualitative.Pastel)
         st.plotly_chart(fig, use_container_width=True)
 
     with col4:
-        age_terr = df.groupby(['classe_age','terr']).size().reset_index(name='n')
-        fig = px.bar(age_terr, x='classe_age', y='n', color='terr',
+        age_terr = df.groupby(['classe_age','territoire']).size().reset_index(name='n')
+        fig = px.bar(age_terr, x='classe_age', y='n', color='territoire',
                      title="Âge × Territoire",
                      color_discrete_sequence=px.colors.qualitative.Set1)
         st.plotly_chart(fig, use_container_width=True)
@@ -186,9 +186,9 @@ with tab2:
 
     # Modes par territoire
     modes = ['pct_voiture','pct_tc','pct_velo','pct_marche']
-    terr_modes = df.groupby('terr')[modes].mean().reset_index()
-    terr_modes_long = terr_modes.melt('terr', var_name='mode', value_name='pct')
-    fig = px.bar(terr_modes_long, x='terr', y='pct', color='mode',
+    terr_modes = df.groupby('territoire')[modes].mean().reset_index()
+    terr_modes_long = terr_modes.melt('territoire', var_name='mode', value_name='pct')
+    fig = px.bar(terr_modes_long, x='territoire', y='pct', color='mode',
                  title="Parts modales par territoire", barmode='group',
                  color_discrete_map={'pct_voiture':'#e74c3c','pct_tc':'#3498db',
                                       'pct_velo':'#2ecc71','pct_marche':'#f39c12'})
@@ -213,14 +213,14 @@ with tab3:
         st.plotly_chart(fig, use_container_width=True)
 
     with col2:
-        co2_terr = df.groupby('terr')['co2_kg_an'].mean().reset_index()
-        fig = px.bar(co2_terr, x='terr', y='co2_kg_an', title="CO₂ moyen par territoire (kg/an)",
-                     color='terr', color_discrete_sequence=px.colors.sequential.Reds)
+        co2_terr = df.groupby('territoire')['co2_kg_an'].mean().reset_index()
+        fig = px.bar(co2_terr, x='territoire', y='co2_kg_an', title="CO₂ moyen par territoire (kg/an)",
+                     color='territoire', color_discrete_sequence=px.colors.sequential.Reds)
         st.plotly_chart(fig, use_container_width=True)
 
     # Scatter dépendance vs CO2
     sample = df.sample(min(5000, n), random_state=42)
-    fig = px.scatter(sample, x='score_dep', y='co2_kg_an', color='terr',
+    fig = px.scatter(sample, x='score_dep', y='co2_kg_an', color='territoire',
                      opacity=0.4, title="Dépendance auto vs Empreinte CO₂",
                      labels={'score_dep':'Score dépendance','co2_kg_an':'CO₂ kg/an'},
                      color_discrete_sequence=px.colors.qualitative.Safe)
@@ -236,7 +236,7 @@ with tab4:
         st.subheader("🚲 Potentiel report vers le vélo")
         mask_velo = (
             (df['score_dep'] < 45) &
-            (df['terr'].isin(['urbain_moyen','urbain_dense','periurbain'])) &
+            (df['territoire'].isin(['urbain_moyen','urbain_dense','periurbain'])) &
             (df['km_jour'] < 20)
         )
         n_velo = mask_velo.sum()
@@ -252,7 +252,7 @@ with tab4:
         mask_tc = (
             (df['acces_train'] > 50) &
             (df['pct_voiture'] > 50) &
-            (df['terr'].isin(['periurbain','urbain_moyen']))
+            (df['territoire'].isin(['periurbain','urbain_moyen']))
         )
         n_tc = mask_tc.sum()
         st.metric("Personas ciblées", f"{n_tc:,} ({n_tc/n*100:.1f}%)")
@@ -265,7 +265,7 @@ with tab4:
     st.subheader("🤝 Potentiel covoiturage longue distance")
     mask_cov = (
         (df['km_jour'] > 15) &
-        (df['terr'].isin(['rural','periurbain'])) &
+        (df['territoire'].isin(['rural','periurbain'])) &
         (df['pct_voiture'] > 60)
     )
     n_cov = mask_cov.sum()
@@ -279,12 +279,12 @@ with tab5:
 
     question = st.text_area("Votre question :", value="Si une piste cyclable sécurisée était créée sur votre trajet domicile-travail, seriez-vous prêt à utiliser le vélo ?", height=80)
 
-    terr_q = st.selectbox("Territoire ciblé", ['Tous'] + df['terr'].unique().tolist())
+    terr_q = st.selectbox("Territoire ciblé", ['Tous'] + df['territoire'].unique().tolist())
     csp_q  = st.selectbox("CSP ciblée", ['Toutes'] + df['csp'].unique().tolist())
 
     if st.button("🚀 Simuler les réponses"):
         df_q = df.copy()
-        if terr_q != 'Tous': df_q = df_q[df_q['terr'] == terr_q]
+        if terr_q != 'Tous': df_q = df_q[df_q['territoire'] == terr_q]
         if csp_q  != 'Toutes': df_q = df_q[df_q['csp'] == csp_q]
 
         n_q = len(df_q)
