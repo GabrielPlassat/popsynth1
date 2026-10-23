@@ -113,7 +113,9 @@ with tab1:
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Personas", f"{n:,}")
     c2.metric("Âge moyen", f"{df['age'].mean():.1f} ans")
-    c3.metric("% femmes", f"{(df['gender'].str.lower().str.contains('f|femme', na=False)).mean()*100:.1f}%")
+    g = df['gender'].astype(str).str.lower()
+    pct_f = g.str.contains('f|femme|female|2', na=False).mean() * 100
+    c3.metric("% femmes", f"{pct_f:.1f}%")
     c4.metric("Km/j moyen", f"{df['km_jour'].mean():.1f} km")
 
     col1, col2 = st.columns(2)
