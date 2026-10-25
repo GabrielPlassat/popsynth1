@@ -170,14 +170,14 @@ with tab1:
                            title="Distribution des âges par genre",
                            color_discrete_sequence=px.colors.qualitative.Set2)
         fig.update_layout(bargap=0.05, legend_title="Genre")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with col2:
         csp_counts = df['csp'].value_counts().reset_index()
         csp_counts.columns = ['csp', 'n']
         fig = px.pie(csp_counts, values='n', names='csp', title="Répartition CSP",
                      color_discrete_sequence=px.colors.qualitative.Set2)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     col3, col4 = st.columns(2)
     with col3:
@@ -185,14 +185,14 @@ with tab1:
         terr_counts.columns = ['territoire', 'n']
         fig = px.bar(terr_counts, x='territoire', y='n', title="Distribution territoriale",
                      color='territoire', color_discrete_sequence=px.colors.qualitative.Pastel)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with col4:
         age_terr = df.groupby(['classe_age', 'territoire']).size().reset_index(name='n')
         fig = px.bar(age_terr, x='classe_age', y='n', color='territoire',
                      title="Âge × Territoire",
                      color_discrete_sequence=px.colors.qualitative.Set1)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -236,7 +236,7 @@ with tab2:
             marker_color=[c for _, c in modes_moy.values()]
         ))
         fig.update_layout(title="Parts modales moyennes (%)", xaxis_title="%")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with col2:
         if 'km_jour' in df.columns:
@@ -245,7 +245,7 @@ with tab2:
             km_csp = km_csp.sort_values('km_jour', ascending=False)
             fig = px.bar(km_csp, x='csp', y='km_jour', title="Km/jour par CSP",
                          color='csp', color_discrete_sequence=px.colors.qualitative.Bold)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
     # Parts modales par territoire
     modes = [m for m in ['pct_voiture', 'pct_tc', 'pct_velo', 'pct_marche'] if m in df.columns]
@@ -257,7 +257,7 @@ with tab2:
                      'pct_voiture': '#e74c3c', 'pct_tc': '#3498db',
                      'pct_velo': '#2ecc71', 'pct_marche': '#f39c12'
                  })
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     # Télétravail
     if 'jours_teletravail_sem' in df.columns:
@@ -269,7 +269,7 @@ with tab2:
             fig = px.bar(tel_csp.sort_values('jours', ascending=False),
                          x='csp', y='jours', title="Jours de télétravail/semaine par CSP",
                          color='csp', color_discrete_sequence=px.colors.qualitative.Pastel)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
         with col2:
             tel_dist = df['jours_teletravail_sem'].value_counts().reset_index()
             tel_dist.columns = ['jours', 'n']
@@ -277,7 +277,7 @@ with tab2:
             fig = px.bar(tel_dist, x='jours', y='n',
                          title="Distribution des jours de télétravail",
                          color_discrete_sequence=['#3498db'])
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -306,13 +306,13 @@ with tab3:
                 color_discrete_sequence=px.colors.qualitative.Bold
             )
             fig.update_layout(showlegend=False, yaxis_title="")
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
         with col2:
             fig = px.pie(paradigme_counts, values='n', names='label',
                          title="Part de chaque paradigme",
                          color_discrete_sequence=px.colors.qualitative.Bold)
             fig.update_traces(textposition='inside', textinfo='percent')
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
         # Paradigme × territoire
         st.subheader("Paradigmes × Territoire")
@@ -325,7 +325,7 @@ with tab3:
                      barmode='stack',
                      color_discrete_sequence=px.colors.qualitative.Bold)
         fig.update_layout(legend_title="Paradigme")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
         # Paradigme × CSP
         par_csp = df.groupby(['csp', 'paradigme_mobilite']).size().reset_index(name='n')
@@ -337,7 +337,7 @@ with tab3:
                      barmode='stack',
                      color_discrete_sequence=px.colors.qualitative.Bold)
         fig.update_layout(legend_title="Paradigme")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     # Profils narratifs
     if 'mobility_persona' in df.columns:
@@ -410,7 +410,7 @@ with tab4:
                          title="Inventaire véhicules moyen par territoire",
                          barmode='group',
                          color_discrete_sequence=px.colors.qualitative.Set2)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
         with col2:
             veh_csp = df.groupby('csp')[['nb_voitures', 'nb_velos']].mean().reset_index()
@@ -422,7 +422,7 @@ with tab4:
                          title="Voitures et vélos moyens par CSP",
                          barmode='group',
                          color_discrete_sequence=['#e74c3c', '#2ecc71'])
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
     # Budget transport
     st.subheader("💶 Budget transport mensuel")
@@ -447,7 +447,7 @@ with tab4:
                          title="Budget transport par CSP (€/mois)",
                          barmode='stack',
                          color_discrete_sequence=['#e74c3c', '#f39c12', '#3498db'])
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
         with col2:
             bud_terr = df.groupby('territoire')[budget_avail].mean().reset_index()
@@ -457,7 +457,7 @@ with tab4:
                          title="Budget transport par territoire (€/mois)",
                          barmode='stack',
                          color_discrete_sequence=['#e74c3c', '#f39c12', '#3498db'])
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
     # Compétences et permis
     st.subheader("🪪 Permis & Compétences")
@@ -481,7 +481,7 @@ with tab4:
                      title="Compétence TC (1 = débutant → 5 = expert)",
                      labels={'score': 'Score /5', 'n': 'Nb personas'},
                      color_discrete_sequence=['#3498db'])
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -506,7 +506,7 @@ with tab5:
                          x='csp', y='km_sport_semaine',
                          title="Distance sportive hebdomadaire par CSP (km)",
                          color='csp', color_discrete_sequence=px.colors.qualitative.Set2)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
         with col2:
             # Distribution des km sport
@@ -514,7 +514,7 @@ with tab5:
             fig = px.histogram(sample_sport, nbins=25,
                                title="Distribution km sport/semaine (pratiquants uniquement)",
                                color_discrete_sequence=['#2ecc71'])
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
     # Activités culturelles
     if 'km_culture_mois' in df.columns:
@@ -526,14 +526,14 @@ with tab5:
                          x='csp', y='km_culture_mois',
                          title="Km/mois pour les activités culturelles par CSP",
                          color='csp', color_discrete_sequence=px.colors.qualitative.Pastel)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
         with col2:
             cult_terr = df.groupby('territoire')['km_culture_mois'].mean().reset_index()
             fig = px.bar(cult_terr, x='territoire', y='km_culture_mois',
                          title="Km/mois culturel par territoire",
                          color='territoire', color_discrete_sequence=px.colors.qualitative.Bold)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
     # Voyages & Vacances
     if 'km_vacances_an' in df.columns:
@@ -553,7 +553,7 @@ with tab5:
                          x='csp', y='km_vacances_an',
                          title="Km vacances/an par CSP",
                          color='csp', color_discrete_sequence=px.colors.qualitative.Set1)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
         with col2:
             # Modes de transport vacances
@@ -571,7 +571,7 @@ with tab5:
                     marker_colors=[c for _, (_, c) in vac_mode_avail.items()],
                 ))
                 fig.update_layout(title="Modes de transport dominants pour les vacances (%)")
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
 
         # Km vacances × paradigme
         if 'paradigme_mobilite' in df.columns:
@@ -584,7 +584,7 @@ with tab5:
                          title="Km vacances/an par paradigme de mobilité",
                          color='label', color_discrete_sequence=px.colors.qualitative.Bold)
             fig.update_layout(showlegend=False, xaxis_tickangle=-30)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -609,7 +609,7 @@ with tab6:
                                color_discrete_sequence=['#e74c3c'])
             fig.add_vline(x=df[SCORE_COL].mean(), line_dash="dash", line_color="black",
                           annotation_text=f"Moy. {df[SCORE_COL].mean():.1f}")
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
         with col2:
             if 'co2_kg_an' in df.columns:
@@ -618,7 +618,7 @@ with tab6:
                              title="CO₂ moyen par territoire (kg/an)",
                              color='territoire',
                              color_discrete_sequence=px.colors.sequential.Reds)
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
 
         if 'co2_kg_an' in df.columns:
             sample = df.sample(min(5000, n), random_state=42)
@@ -626,7 +626,7 @@ with tab6:
                              opacity=0.4, title="Dépendance auto vs Empreinte CO₂",
                              labels={SCORE_COL: 'Score dépendance', 'co2_kg_an': 'CO₂ kg/an'},
                              color_discrete_sequence=px.colors.qualitative.Safe)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
     # Segments cibles
     st.subheader("Segments à potentiel de report modal")
@@ -645,7 +645,7 @@ with tab6:
             fig = px.bar(df[mask_velo]['csp'].value_counts().reset_index(),
                          x='csp', y='count', title="CSP des personas pro-vélo",
                          color_discrete_sequence=['#2ecc71'])
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
     with col2:
         st.markdown("#### 🚌 Potentiel report vers les TC")
@@ -659,7 +659,7 @@ with tab6:
             fig = px.bar(df[mask_tc]['csp'].value_counts().reset_index(),
                          x='csp', y='count', title="CSP des personas pro-TC",
                          color_discrete_sequence=['#3498db'])
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
     st.markdown("#### 🤝 Potentiel covoiturage longue distance")
     mask_cov = (
@@ -691,7 +691,7 @@ with tab6:
                              color_discrete_sequence=px.colors.qualitative.Bold)
             fig.update_traces(textposition='top center')
             fig.update_layout(showlegend=False)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -777,7 +777,7 @@ with tab7:
                 fig = px.pie(values=list(r.values()), names=list(r.keys()),
                              title=f"Réponses simulées ({n_q:,} personas)",
                              color_discrete_sequence=['#2ecc71', '#e74c3c', '#f39c12', '#95a5a6'])
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
 
             st.caption("⚠️ Simulation probabiliste basée sur les profils EMP 2019 et les paradigmes de mobilité. Résultats indicatifs.")
 
